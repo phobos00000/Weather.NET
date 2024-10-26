@@ -31,13 +31,13 @@ public static class OneCallApi
     /// <param name="measurementSystem"> The measurement system of the output. </param>
     /// <param name="language"> The language of the output. </param>
     /// <returns> The OneCall API response, excluding the said parameters. </returns>
-    public static async Task<OneCallModel> GetOneCallAsync(this WeatherClient client, double latitude, double longitude, ExcludeOneCall[] exclude, Measurement measurementSystem = Measurement.Standard, Language language = Language.English)
+    public static async Task<OneCallModel> GetOneCallAsync(this WeatherClient client, double latitude, double longitude, ExcludeOneCall[] exclude, Measurement measurementSystem = Measurement.Standard, Language language = Language.English, string version = "3.0")
     {
         string file;
         if (exclude.Length == 0)
-            file = await RestApi.GetWebpageStringAsync($"https://api.openweathermap.org/data/2.5/onecall?lat={latitude}&lon={longitude}&appid={client.ApiKey}&units={measurementSystem.Convert()}&lang={language.Convert()}");
+            file = await RestApi.GetWebpageStringAsync($"https://api.openweathermap.org/data/{version}/onecall?lat={latitude}&lon={longitude}&appid={client.ApiKey}&units={measurementSystem.Convert()}&lang={language.Convert()}");
         else
-            file = await RestApi.GetWebpageStringAsync($"https://api.openweathermap.org/data/2.5/onecall?lat={latitude}&lon={longitude}&exclude={string.Join(',', exclude.Select(x => x.Convert()))}&appid={client.ApiKey}&units={measurementSystem.Convert()}&lang={language.Convert()}");
+            file = await RestApi.GetWebpageStringAsync($"https://api.openweathermap.org/data/{version}/onecall?lat={latitude}&lon={longitude}&exclude={string.Join(',', exclude.Select(x => x.Convert()))}&appid={client.ApiKey}&units={measurementSystem.Convert()}&lang={language.Convert()}");
         return JsonConvert.DeserializeObject<OneCallModel>(file);
     }
 
